@@ -1,0 +1,46 @@
+﻿1、PS CS6
+这个是比较经典的版本，该有的功能都有了，一般电脑也能跑得起。
+链接:https://pan.baidu.com/s/18eDDdVTPTDgu1tIuq0Xx0Q
+密码:6suq
+
+2、PS CC
+较新的版本，但是一般的游戏本打开也慢，配置无敌请随意
+链接:https://pan.baidu.com/s/1F1oC02vo8DGMsA8UtHyqMQ
+提取码: fhcj
+
+3、matlab
+数学运算软件，线性代数方向特化，懂的人都知道他的强大
+链接: https://pan.baidu.com/s/19oO2qY3Hb9eGA--q2U6X4Q 
+提取码: s1pb
+<!-请先在网上查找iso文件安装教程-!>
+
+4、mathematica
+也是数学运算软件，综合能力极强
+个人极力推荐，强无敌
+安装教程（内含下载地址）:
+https://tiebamma.github.io/InstallTutorial/
+
+5、autoCAD2014
+工程制图软件，大多数老师使用的版本
+http://tieba.baidu.com/p/3640319155?pid=65691499143&cid=0#
+下载链接请空降10楼
+安装教程在10楼之后
+
+6、mDict
+简朴的自定义词典，好用。
+官网:https://www.mdict.cn/wp/?lang=zh
+词典:https://pan.baidu.com/s/1-mVbNTZKsLgPiGDX0ZgWTw
+提取码: 23nr
+
+7、VS2017
+编译器，懂的人都会下的
+不懂的不用点进去看了，下了也没用...
+https://visualstudio.microsoft.com/zh-hans/downloads/
+社区版免费
+
+8、Sublime Text
+轻量级文本编辑器，可以一键添加插件
+百步梯技术部大佬倾力推荐
+https://www.sublimetext.com/
+
+（欢迎推荐更多软件）

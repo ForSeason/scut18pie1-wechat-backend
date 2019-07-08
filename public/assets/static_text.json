@@ -1,0 +1,6 @@
+{
+    "教材":   "assets/textbooks.txt",
+    "软件":   "assets/software.txt",
+    "作业":   "assets/homework.txt",
+    "作业栏": "assets/homework.txt"
+}
