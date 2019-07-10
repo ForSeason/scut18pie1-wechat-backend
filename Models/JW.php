@@ -109,9 +109,9 @@ class JW extends Model {
             $week = array();
             $temp_arr = explode(',', $lesson['zcd']);
             foreach ($temp_arr as $str) {
-                $pattern = '/^\d+?周$/';
+                $pattern = '/^(\d+?)周$/';
                 if (preg_match($pattern, $str)) {
-                    $week[] = $str;
+                    $week[] = preg_replace($pattern, '$1', $str);
                     continue;
                 }
                 $pattern = '/^(\d+?)-(\d+?)周$/';
