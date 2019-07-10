@@ -104,6 +104,7 @@ class JW extends Model {
             $name    = $lesson['kcmc'];
             $day     = $lesson['xqjmc'];
             $teacher = $lesson['xm'];
+            $room    = $lesson['cdmc'];
             $period  = '第'.$lesson['jcor'].'节';
             // 处理屑教务的上课周
             $week = array();
@@ -130,7 +131,7 @@ class JW extends Model {
                 }
             }
             if (!in_array($thisweek, $week)) continue;
-            $tmp = array($name, $period, $teacher);
+            $tmp = array($name, $room, $period, $teacher);
             $res[$day][] = $tmp;
         }
 
