@@ -25,22 +25,22 @@ class Voting {
         /*
          *  下面开始检测用户是否使用如下业务
          */
-        $pattern  = '/^发起投票 ([\s\S]+)$/;';
+        $pattern  = '/^发起投票 ([\s\S]+)$/';
         if (preg_match($pattern, $input)) return $this->createVote($input, $username);
 
-        $pattern  = '/^删除投票 ([\s\S]+)$/;';
+        $pattern  = '/^删除投票 ([\s\S]+)$/';
         if (preg_match($pattern, $input)) return $this->deleteVote($input, $username);
 
-        $pattern  = '/^投票 ([\s\S]+)$/;';
+        $pattern  = '/^投票 ([\s\S]+)$/';
         if (preg_match($pattern, $input)) return $this->vote($input, $username);
 
-        $pattern  = '/^查看投票 ([\s\S]+)$/;';
+        $pattern  = '/^查看投票 ([\s\S]+)$/';
         if (preg_match($pattern, $input)) return $this->getVoteInfo($input, $username);
 
-        $pattern  = '/^撤销投票 ([\s\S]+)$/;';
+        $pattern  = '/^撤销投票 ([\s\S]+)$/';
         if (preg_match($pattern, $input)) return $this->unVote($input, $username);
 
-        $pattern  = '/^查看所有投票$/;';
+        $pattern  = '/^查看所有投票$/';
         if (preg_match($pattern, $input)) return $this->fetchVotes();
 
         return false;
