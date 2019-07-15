@@ -47,7 +47,7 @@ class Voting {
     }
 
     public function createVote($input, $creator) {
-        $pattern = '/^发起投票 ([\s\S]+)$/;';
+        $pattern = '/^发起投票 ([\s\S]+)$/';
         $class   = preg_replace($pattern, '$1', $input);
         if (Vote::vote_exists($class)) {
             $res = 'Fatel error: Vote exists.';
@@ -60,7 +60,7 @@ class Voting {
     }
 
     public function deleteVote($input, $username) {
-        $pattern = '/^删除投票 ([\s\S]+)$/;';
+        $pattern = '/^删除投票 ([\s\S]+)$/';
         $class   = preg_replace($pattern, '$1', $input);
         $vote    = new Vote($username, $class);
         $status  = $vote->destroy();
@@ -69,7 +69,7 @@ class Voting {
     }
 
     public function vote($input, $username) {
-        $pattern = '/^投票 ([\s\S]+)$/;';
+        $pattern = '/^投票 ([\s\S]+)$/';
         $class   = preg_replace($pattern, '$1', $input);
         $vote    = new Vote($username, $class);
         $status  = $vote->push();
@@ -78,7 +78,7 @@ class Voting {
     }
 
     public function unVote($input, $username) {
-        $pattern = '/^撤销投票 ([\s\S]+)$/;';
+        $pattern = '/^撤销投票 ([\s\S]+)$/';
         $class   = preg_replace($pattern, '$1', $input);
         $vote    = new Vote($username, $class);
         $status  = $vote->pop();
@@ -92,7 +92,7 @@ class Voting {
     }
 
     public function getVoteInfo($input, $username) {
-        $pattern = '/^查看投票 ([\s\S]+)$/;';
+        $pattern = '/^查看投票 ([\s\S]+)$/';
         $class   = preg_replace($pattern, '$1', $input);
         if (!Vote::vote_exists($class)) {
             $res = 'Fatel error: Vote does not exist.';
