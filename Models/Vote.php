@@ -11,6 +11,7 @@ class Vote extends Model {
     public function __construct($username, $class = null) {
         // if $class in database
         $this->username = $username;
+        $this->construct();
         if (self::vote_exists($class)) {
             // read from database
             $this->class = $class;
@@ -34,6 +35,7 @@ class Vote extends Model {
         } else {
             array_push($this->list, $this->username);
             $this->list = array_values($this->list);
+            $this->save();
             return true;
         }
     }
@@ -43,6 +45,7 @@ class Vote extends Model {
             $key = array_search($this->username, $this->list);
             unset($this->list[$key]);
             $this->list = array_values($this->list); 
+            $this->save();
             return true;
         } else {
             return false;

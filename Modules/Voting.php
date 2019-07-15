@@ -97,9 +97,9 @@ class Voting {
         if (!Vote::vote_exists($class)) {
             $res = 'Fatel error: Vote does not exist.';
         } else {
-            $vote = new Vote($creator, $class);
-            $res  = '发起人: '.$obj_vote->creator."\r\n".count($obj_vote->list).'人: ';
-            $res .= (implode(', ',$obj_vote->list) == '')?'no member': implode(', ',$obj_vote->list);
+            $vote = new Vote($username, $class);
+            $res  = '发起人: '.$vote->creator."\r\n".count($vote->list).'人: ';
+            $res .= (implode(', ',$vote->list) == '')?'no member': implode(', ',$vote->list);
         }
         return $res;
     }
