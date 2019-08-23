@@ -183,7 +183,8 @@ class JW extends Model {
 
     public function format_schedule($schedule, $week) {
         $head = '第'.$week.'周'."\r\n";
-        $next_class = '下一节课: '.JW::next_class($schedule)."\r\n";
+        $next_class = JW::next_class($schedule);
+        $next_class = $next_class[0]? '下一节课: '.$next_class[1]: $next_class[1];
         $str  = '';
         foreach($schedule as $day => $lessonList) {
             if ($lessonList != array()) {
@@ -198,7 +199,7 @@ class JW extends Model {
                 $str .= "\r\n";
             }
         }
-        return ($str)? $head.$next_class.$str: $head."暂无课表.\r\n";
+        return ($str)? $head.$next_class."\r\n\r\n".$str: $head."暂无课表.\r\n";
     }
 
     public function next_class($schedule) {
@@ -214,21 +215,18 @@ class JW extends Model {
         );
         $now_time = (int)date("Hi",time());
         $now_day  = (int)date("N",time());
-        if (!array_key_exists($week_days[$now_day], $schedule)) return '';
+        if (!array_key_exists($week_days[$now_day], $schedule)) return [false, '今天没有课哦～'];
         foreach ($schedule[$week_days[$now_day]] as $lesson) {
             $start_period_str = $lesson['period'];
             $pattern = '/.*?(\d).*/';
             $start_period = (int)preg_replace($pattern, '$1', $start_period_str);
             $schedule_time = json_decode(SCHEDULE_TIME, true);
             if ($schedule_time[$lesson['region']][$start_period] > $now_time) {
-                $res= $lesson['name'].' '.
-                    $lesson['room'].' '.
-                    $lesson['period'].' '.
-                    $lesson['teacher']."\r\n";
-                return $res;
+                $res = $lesson['name'].' '.$lesson['room'].' '.$lesson['period'].' '.$lesson['teacher'];
+                return [true, $res];
             }
         }
-        return '今天已经没课啦！';
+        return [false, '今天已经没课啦！'];
     }
 
     public function schedule_exists() {

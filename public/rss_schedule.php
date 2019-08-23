@@ -13,7 +13,7 @@ $thisweek = date("W", time()) - WEEK_START;
 $rss = new Rss();
 
 $model = new Models\Model();
-$sql = "SELECT day,name,room,period,teacher FROM schedule WHERE weixinID=? AND week=?";
+$sql = "SELECT day,name,room,period,teacher,region FROM schedule WHERE weixinID=? AND week=?";
 $stmt = $model->link->prepare($sql);
 $stmt->execute([$weixinID, $thisweek]);
 $arr = $stmt->fetchAll(\PDO::FETCH_ASSOC | \PDO::FETCH_GROUP);
@@ -41,6 +41,33 @@ $item = [
     ]
 ];
 $rss->item($item);
+
+$next_class = $jw->next_class($arr);
+if ($next_class[0]) {
+    $item = [
+        'title' => '下一节课',
+        'description' => $next_class[1],
+        'source' => [
+            'value' => '',
+            'attr' => [
+                'url' => ''
+            ]
+        ]
+    ];
+} else {
+    $item = [
+        'title' => $next_class[1],
+        'description' => '好好休息吧～',
+        'source' => [
+            'value' => '',
+            'attr' => [
+                'url' => ''
+            ]
+        ]
+    ];
+}
+$rss->item($item);
+
 $bo = false;
 foreach($arr as $day => $lessonList) {
     if ($lessonList != array()) {
