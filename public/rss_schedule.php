@@ -42,7 +42,7 @@ $item = [
 ];
 $rss->item($item);
 
-$next_class = $jw->next_class($arr);
+$next_class = JW::next_class($arr);
 if ($next_class[0]) {
     $item = [
         'title' => '下一节课',
@@ -73,8 +73,10 @@ foreach($arr as $day => $lessonList) {
     if ($lessonList != array()) {
         $str = '';
         foreach ($lessonList as $lesson) {
-            foreach ($lesson as $element) $str .= $element.'  ';
-            $str .= "<br/>";
+            $str .= $lesson['name'].' '.
+                $lesson['room'].' '.
+                $lesson['period'].' '.
+                $lesson['teacher']."<br/>";
         } 
     }
     $item = [

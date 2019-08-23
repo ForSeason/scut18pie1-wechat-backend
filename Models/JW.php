@@ -222,7 +222,10 @@ class JW extends Model {
             $start_period = (int)preg_replace($pattern, '$1', $start_period_str);
             $schedule_time = json_decode(SCHEDULE_TIME, true);
             if ($schedule_time[$lesson['region']][$start_period] > $now_time) {
-                $res = $lesson['name'].' '.$lesson['room'].' '.$lesson['period'].' '.$lesson['teacher'];
+                $res = $lesson['name'].' '.
+                    $lesson['room'].' '.
+                    $lesson['period'].' '.
+                    $lesson['teacher'];
                 return [true, $res];
             }
         }
