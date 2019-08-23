@@ -8,8 +8,6 @@ use \Modules\Wechat as Wechat;
 use \Modules\Route  as Route;
 use \Models\Logger  as Logger;
 
-header('Content-Type:text/html;charset=utf-8');
-date_default_timezone_set("Asia/Shanghai");
 $timestamp = isset($_GET['timestamp'])? $_GET['timestamp']: '';
 $nonce     = isset($_GET['nonce'])? $_GET['nonce']: '';
 $token     = TOKEN;

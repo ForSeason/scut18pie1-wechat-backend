@@ -41,7 +41,7 @@ $item = [
 ];
 $rss->item($item);
 
-$next_class = next_class($arr);
+$next_class = $jw->next_class($arr);
 if ($next_class[0]) {
     $item = [
         'title' => '下一节课',
@@ -103,36 +103,3 @@ $item = [
 ];
 if (!$bo) $rss->item($item);
 echo $rss;
-
-
-
-
-function next_class($schedule) {
-    $week_days = array(
-        '星期零',
-        '星期一', 
-        '星期二', 
-        '星期三', 
-        '星期四', 
-        '星期五', 
-        '星期六', 
-        '星期日' 
-    );
-    $now_time = (int)date("Hi",time());
-    $now_day  = (int)date("N",time());
-    if (!array_key_exists($week_days[$now_day], $schedule)) return [false, '今天没有课哦～'];
-    foreach ($schedule[$week_days[$now_day]] as $lesson) {
-        $start_period_str = $lesson['period'];
-        $pattern = '/.*?(\d).*/';
-        $start_period = (int)preg_replace($pattern, '$1', $start_period_str);
-        $schedule_time = json_decode(SCHEDULE_TIME, true);
-        if ($schedule_time[$lesson['region']][$start_period] > $now_time) {
-            $res = $lesson['name'].' '.
-                $lesson['room'].' '.
-                $lesson['period'].' '.
-                $lesson['teacher'];
-            return [true, $res];
-        }
-    }
-    return [false, '今天已经没课啦！'];
-}
