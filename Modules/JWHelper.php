@@ -40,8 +40,12 @@ class JWHelper {
         if (preg_match($pattern, $input) && $jw->existence) return $this->renew_schedule($jw);
         
         $pattern  = '/课表rss源/';
-        if (preg_match($pattern, $input) && $jw->existence) 
-            return 'http://'.$_SERVER['HTTP_HOST'].'/rss_schedule.php?weixinID='.$weixinID;
+        if (preg_match($pattern, $input) && $jw->existence) {
+            $http_type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || 
+                (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) 
+                ? 'https://' : 'http://';
+            return $http_type.$_SERVER['HTTP_HOST'].'/rss_schedule.php?weixinID='.$weixinID;
+        }
 
         $pattern  = '/课表[^\d]*$/';
         if (preg_match($pattern, $input) && $jw->existence) return $this->schedule($jw);
@@ -89,7 +93,10 @@ class JWHelper {
         if ($redis->exists('wechat:schedule:'.$jw->weixinID.':'.$jw->time)) return '正在进行处理，请稍后。';
         $curl = curl_init();
         $query = sprintf('?weixinID=%s&time=%s', $jw->weixinID, $jw->time);
-        $url = 'http://'.$_SERVER['HTTP_HOST'].'/renew_schedule.php';
+        $http_type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || 
+            (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) 
+            ? 'https://' : 'http://';
+        $url = $http_type.$_SERVER['HTTP_HOST'].'/renew_schedule.php';
         curl_setopt($curl, CURLOPT_URL, $url.$query);
         curl_setopt($curl, CURLOPT_HEADER, 0);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
