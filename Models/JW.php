@@ -111,6 +111,7 @@ class JW extends Model {
             $day     = $lesson['xqjmc'];
             $teacher = $lesson['xm'];
             $room    = $lesson['cdmc'];
+            $region  = $lesson['xqmc'];
             $period  = '第'.$lesson['jcor'].'节';
             // 处理屑教务的上课周
             $weeks   = array();
@@ -140,7 +141,8 @@ class JW extends Model {
                 'name' => $name, 
                 'room' => $room, 
                 'period' => $period, 
-                'teacher' => $teacher
+                'teacher' => $teacher,
+                'region' => $region
             );
             foreach ($weeks as $week) $res[$week][$day][] = $tmp;
         }
@@ -152,7 +154,7 @@ class JW extends Model {
         $stmt = $this->link->prepare($sql);
         $stmt->execute([$this->weixinID]);
 
-        $sql = "INSERT INTO schedule(weixinID,week,day,name,room,period,teacher) VALUES(?,?,?,?,?,?,?);";
+        $sql = "INSERT INTO schedule(weixinID,week,day,name,room,period,teacher,region) VALUES(?,?,?,?,?,?,?,?);";
         foreach ($schedule as $week => $days)
             foreach ($days as $day => $lessons)
                 foreach ($lessons as $lesson) {
@@ -161,24 +163,29 @@ class JW extends Model {
                         $this->weixinID, 
                         $week, 
                         $day, 
-                        $lesson['name'],  // $name
-                        $lesson['room'],  // $room 
-                        $lesson['period'],  // $period 
-                        $lesson['teacher']   // $teacher 
+                        $lesson['name'],  
+                        $lesson['room'],  
+                        $lesson['period'], 
+                        $lesson['teacher'],
+                        $lesson['region'] 
                     ]);
                 }
         return true;
     }
 
     public function load_schedule($week) {
-        $sql = "SELECT day,name,room,period,teacher FROM schedule WHERE weixinID=? AND week=?";
+        $sql = "SELECT day,name,room,period,teacher,region FROM schedule WHERE weixinID=? AND week=?";
         $stmt = $this->link->prepare($sql);
         $stmt->execute([$this->weixinID, $week]);
         $arr = $stmt->fetchAll(\PDO::FETCH_ASSOC | \PDO::FETCH_GROUP);
+        return $arr;
+    }
 
+    public function format_schedule($schedule, $week) {
         $head = '第'.$week.'周'."\r\n";
+        $next_class = JW::next_class($schedule)."\r\n";
         $str  = '';
-        foreach($arr as $day => $lessonList) {
+        foreach($schedule as $day => $lessonList) {
             if ($lessonList != array()) {
                 $str .= $day;
                 $str .= "\r\n";
@@ -189,7 +196,35 @@ class JW extends Model {
                 $str .= "\r\n";
             }
         }
-        return ($str)? $head.$str: $head."暂无课表.\r\n";
+        return ($str)? $head.$next_class.$str: $head."暂无课表.\r\n";
+    }
+
+    public function next_class($schedule) {
+        $week_days = array(
+            '星期零',
+            '星期一', 
+            '星期二', 
+            '星期三', 
+            '星期四', 
+            '星期五', 
+            '星期六', 
+            '星期日' 
+        );
+        $now_time = (int)date("Hi",time());
+        $now_day  = (int)date("N",time());
+        if (!array_key_exists($week_days[$now_day], $schedule)) return '';
+        foreach ($schedule[$week_days[$now_day]] as $lesson) {
+            $start_period_str = $lesson[2];
+            $pattern = '/.*?(\d).*/';
+            $start_period = (int)preg_replace($pattern, '$1', $start_period_str);
+            $schedule_time = json_decode(SCHEDULE_TIME, true);
+            if ($schedule_time[$lesson[4]][$start_period] > $now_time) {
+                $res = '';
+                foreach ($lesson as $element) $res .= $element.'  ';
+                return res;
+            }
+        }
+        return '今天已经没课啦！';
     }
 
     public function schedule_exists() {

@@ -78,14 +78,16 @@ class JWHelper {
     public function schedule($jw) {
         $thisweek = date("W", time()) - WEEK_START;
         if (!$jw->schedule_exists()) return $this->renew_schedule($jw);
-        return $jw->load_schedule($thisweek);
+        $schedule = $jw->load_schedule($thisweek);
+        return $jw->format_schedule($schedule, $thisweek);
     }
 
     public function schedule_sp($jw, $input) {
         $pattern  = '/课表 (\d+?)/';
         $week = preg_replace($pattern, '$1', $input);
         if (!$jw->schedule_exists()) return $this->renew_schedule($jw);
-        return $jw->load_schedule($week);
+        $schedule = $jw->load_schedule($thisweek);
+        return $jw->format_schedule($schedule, $thisweek);
     }
 
     public function renew_schedule($jw) {
