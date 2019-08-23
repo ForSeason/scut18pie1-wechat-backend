@@ -183,15 +183,17 @@ class JW extends Model {
 
     public function format_schedule($schedule, $week) {
         $head = '第'.$week.'周'."\r\n";
-        $next_class = JW::next_class($schedule)."\r\n";
+        $next_class = '下一节课: '.JW::next_class($schedule)."\r\n";
         $str  = '';
         foreach($schedule as $day => $lessonList) {
             if ($lessonList != array()) {
                 $str .= $day;
                 $str .= "\r\n";
                 foreach ($lessonList as $lesson) {
-                    foreach ($lesson as $element) $str .= $element.'  ';
-                    $str .= "\r\n";
+                    $str .= $lesson['name'].' '.
+                        $lesson['room'].' '.
+                        $lesson['period'].' '.
+                        $lesson['teacher']."\r\n";
                 } 
                 $str .= "\r\n";
             }
@@ -214,14 +216,16 @@ class JW extends Model {
         $now_day  = (int)date("N",time());
         if (!array_key_exists($week_days[$now_day], $schedule)) return '';
         foreach ($schedule[$week_days[$now_day]] as $lesson) {
-            $start_period_str = $lesson[2];
+            $start_period_str = $lesson['period'];
             $pattern = '/.*?(\d).*/';
             $start_period = (int)preg_replace($pattern, '$1', $start_period_str);
             $schedule_time = json_decode(SCHEDULE_TIME, true);
-            if ($schedule_time[$lesson[4]][$start_period] > $now_time) {
-                $res = '';
-                foreach ($lesson as $element) $res .= $element.'  ';
-                return res;
+            if ($schedule_time[$lesson['region']][$start_period] > $now_time) {
+                $res= $lesson['name'].' '.
+                    $lesson['room'].' '.
+                    $lesson['period'].' '.
+                    $lesson['teacher']."\r\n";
+                return $res;
             }
         }
         return '今天已经没课啦！';
