@@ -195,8 +195,10 @@ class JW extends Model {
     public function schedule_exists() {
         $sql = "SELECT * FROM schedule WHERE weixinID=?";
         $stmt = $this->link->prepare($sql);
-        $res = $stmt->execute([$this->weixinID]);
-        return $res? true: false;
+        $stmt->execute([$this->weixinID]);
+        $res = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        foreach ($res as $row) return true;
+        return false;
     }
 
     public function JWcurl($afterfix, $postfield) {

@@ -9,8 +9,7 @@ $weixinID = $_GET['weixinID'];
 if (!$weixinID) return;
 
 $jw = new JW($weixinID, 23333);
-// $thisweek = date("W", time()) - WEEK_START;
-$thisweek = 1;
+$thisweek = date("W", time()) - WEEK_START;
 $rss = new Rss();
 
 $model = new Models\Model();

@@ -88,14 +88,14 @@ class JWHelper {
         $redis = new \Predis\Client();
         if ($redis->exists('wechat:schedule:'.$jw->weixinID.':'.$jw->time)) return '正在进行处理，请稍后。';
         $curl = curl_init();
-        $postfield = ['weixinID' => $jw->weixinID, 'time' => $jw->time];
+        $query = sprintf('?weixinID=%s&time=%s', $jw->weixinID, $jw->time);
         $url = 'http://'.$_SERVER['HTTP_HOST'].'/renew_schedule.php';
-        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_URL, $url.$query);
         curl_setopt($curl, CURLOPT_HEADER, 0);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $postfield);
         curl_setopt($curl, CURLOPT_TIMEOUT, 1);
         curl_exec($curl);
+        curl_close($curl);
         return '开始初始化课表。请等待一会再查看课表，获取速度视教务速度而定。';
     }
 }

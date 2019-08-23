@@ -5,8 +5,8 @@ require __DIR__."/../settings/general.php";
 use Models\JW as JW;
 
 $base_url = $_SERVER['HTTP_HOST']; 
-$weixinID = $_POST['weixinID'];
-$time     = $_POST['time'];
+$weixinID = $_GET['weixinID'];
+$time     = $_GET['time'];
 if (!$weixinID || !$time) return;
 $redis = new \Predis\Client();
 $jw    = new JW($weixinID, $time);
