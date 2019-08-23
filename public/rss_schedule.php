@@ -107,7 +107,7 @@ echo $rss;
 
 
 
-public function next_class($schedule) {
+function next_class($schedule) {
     $week_days = array(
         '星期零',
         '星期一', 
