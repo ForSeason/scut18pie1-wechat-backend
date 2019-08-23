@@ -1,5 +1,7 @@
 {
     "require": {
+        "predis/predis": "^1.1",
+        "moell/rss": "^1.0"
     },
     "autoload": {
         "psr-4": {

@@ -24,12 +24,6 @@ class Route {
         if ($this->responded) exit;
 
         Tuling::response($postObj);
-         //$keyword='课程表';
-         //$Content="下一节课是:\n".self::nextClass()."\n\n".self::timeTable();
-         //self::responseText($postObj,$keyword,$Content);
-         //$keyword='课表';
-         //$Content="下一节课是:\n".self::nextClass()."\n\n".self::timeTable();
-         //self::responseText($postObj,$keyword,$Content);
          //$keyword='下一节课';
          //$Content=self::nextClass();
          //self::responseText($postObj,$keyword,$Content);

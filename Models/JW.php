@@ -5,10 +5,14 @@ namespace Models;
 class JW extends Model {
     public $account;
     public $password;
+    public $weixinID;
+    public $time;
     public $existence = true;
 
-    public function __construct($weixinID) {
+    public function __construct($weixinID, $time) {
         $this->construct();
+        $this->weixinID = $weixinID;
+        $this->time     = $time;
         $sql = "select * from jw where weixinID=?;";
         $stmt = $this->link->prepare($sql);
         $stmt->execute(array($weixinID));
@@ -76,7 +80,7 @@ class JW extends Model {
         return $res.'查询结束.';
     }
 
-    public function fetch_schedule($week) {
+    public function fetch_schedule() {
         $postfield = array(
             'account' => $this->account,
             'password' => $this->password,
@@ -86,12 +90,12 @@ class JW extends Model {
         $data = $this->JWcurl('/schedule', $postfield);
         if (!$data) return 'Unknown error.';
         if (array_key_exists('message', $data)) return $data['message'];
-        $schedule = $this->parse_schedule($data['kbList'], $week);
-        return $schedule.'查询结束.';
+        $schedule = $this->parse_schedule($data['kbList']);
+        return $schedule;
     }
 
-    public function parse_schedule($data, $thisweek) {
-        $res = array(
+    public function parse_schedule($data) {
+        $one_week = array(
             '星期一' => array(), 
             '星期二' => array(), 
             '星期三' => array(), 
@@ -100,6 +104,8 @@ class JW extends Model {
             '星期六' => array(), 
             '星期日' => array() 
         );
+        $res = array();
+        for ($week = 0; $week <= 30; $week++) $res[] = $one_week;
         foreach($data as $lesson) {
             $name    = $lesson['kcmc'];
             $day     = $lesson['xqjmc'];
@@ -107,37 +113,72 @@ class JW extends Model {
             $room    = $lesson['cdmc'];
             $period  = '第'.$lesson['jcor'].'节';
             // 处理屑教务的上课周
-            $week = array();
+            $weeks   = array();
             $temp_arr = explode(',', $lesson['zcd']);
             foreach ($temp_arr as $str) {
                 $pattern = '/^(\d+?)周$/';
                 if (preg_match($pattern, $str)) {
-                    $week[] = preg_replace($pattern, '$1', $str);
+                    $weeks[] = preg_replace($pattern, '$1', $str);
                     continue;
                 }
                 $pattern = '/^(\d+?)-(\d+?)周$/';
                 if (preg_match($pattern, $str)) {
                     $min = preg_replace($pattern, '$1', $str);
                     $max = preg_replace($pattern, '$2', $str);
-                    for ($i = $min; $i <= $max; $i++) $week[] = $i;
+                    for ($i = $min; $i <= $max; $i++) $weeks[] = $i;
                     continue;
                 }
                 $pattern = '/^(\d+?)-(\d+?)周.+/';
                 if (preg_match($pattern, $str)) {
                     $min = preg_replace($pattern, '$1', $str);
                     $max = preg_replace($pattern, '$2', $str);
-                    for ($i = $min; $i <= $max; $i += 2) $week[] = $i;
+                    for ($i = $min; $i <= $max; $i += 2) $weeks[] = $i;
                     continue;
                 }
             }
-            if (!in_array($thisweek, $week)) continue;
-            $tmp = array($name, $room, $period, $teacher);
-            $res[$day][] = $tmp;
+            $tmp = array(
+                'name' => $name, 
+                'room' => $room, 
+                'period' => $period, 
+                'teacher' => $teacher
+            );
+            foreach ($weeks as $week) $res[$week][$day][] = $tmp;
         }
+        return $res;
+    }
 
-        $head = '第'.$thisweek.'周'."\r\n";
+    public function save_schedule($schedule) {
+        $sql  = "DELETE FROM schedule WHERE weixinID=?;";
+        $stmt = $this->link->prepare($sql);
+        $stmt->execute([$this->weixinID]);
+
+        $sql = "INSERT INTO schedule(weixinID,week,day,name,room,period,teacher) VALUES(?,?,?,?,?,?,?);";
+        foreach ($schedule as $week => $days)
+            foreach ($days as $day => $lessons)
+                foreach ($lessons as $lesson) {
+                    $stmt = $this->link->prepare($sql);
+                    $stmt->execute([
+                        $this->weixinID, 
+                        $week, 
+                        $day, 
+                        $lesson['name'],  // $name
+                        $lesson['room'],  // $room 
+                        $lesson['period'],  // $period 
+                        $lesson['teacher']   // $teacher 
+                    ]);
+                }
+        return true;
+    }
+
+    public function load_schedule($week) {
+        $sql = "SELECT day,name,room,period,teacher FROM schedule WHERE weixinID=? AND week=?";
+        $stmt = $this->link->prepare($sql);
+        $stmt->execute([$this->weixinID, $week]);
+        $arr = $stmt->fetchAll(\PDO::FETCH_ASSOC | \PDO::FETCH_GROUP);
+
+        $head = '第'.$week.'周'."\r\n";
         $str  = '';
-        foreach($res as $day => $lessonList) {
+        foreach($arr as $day => $lessonList) {
             if ($lessonList != array()) {
                 $str .= $day;
                 $str .= "\r\n";
@@ -149,6 +190,13 @@ class JW extends Model {
             }
         }
         return ($str)? $head.$str: $head."暂无课表.\r\n";
+    }
+
+    public function schedule_exists() {
+        $sql = "SELECT * FROM schedule WHERE weixinID=?";
+        $stmt = $this->link->prepare($sql);
+        $res = $stmt->execute([$this->weixinID]);
+        return $res? true: false;
     }
 
     public function JWcurl($afterfix, $postfield) {

@@ -14,6 +14,7 @@ class JWHelper {
     public function roll($postObj) {
         $input    = $postObj->Content;
         $weixinID = $postObj->FromUserName;
+        $time     = $postObj->CreateTime;
 
         /*
          *  下面开始检测用户是否使用如下业务
@@ -27,13 +28,20 @@ class JWHelper {
         /*
          *  下面的业务，用户不绑定的话则无法使用
          */
-        $jw = new JW($weixinID);
+        $jw = new JW($weixinID, $time);
 
         $pattern  = '/考试成绩/';
         if (preg_match($pattern, $input) && $jw->existence) return $this->score($jw);
 
         $pattern  = '/考试信息/';
         if (preg_match($pattern, $input) && $jw->existence) return $this->exam($jw);
+
+        $pattern  = '/更新课表/';
+        if (preg_match($pattern, $input) && $jw->existence) return $this->renew_schedule($jw);
+        
+        $pattern  = '/课表rss源/';
+        if (preg_match($pattern, $input) && $jw->existence) 
+            return 'http://'.$_SERVER['HTTP_HOST'].'/rss_schedule.php?weixinID='.$weixinID;
 
         $pattern  = '/课表[^\d]*$/';
         if (preg_match($pattern, $input) && $jw->existence) return $this->schedule($jw);
@@ -65,12 +73,29 @@ class JWHelper {
 
     public function schedule($jw) {
         $thisweek = date("W", time()) - WEEK_START;
-        return $jw->fetch_schedule($thisweek);
+        if (!$jw->schedule_exists()) return $this->renew_schedule($jw);
+        return $jw->load_schedule($thisweek);
     }
 
     public function schedule_sp($jw, $input) {
         $pattern  = '/课表 (\d+?)/';
-        $thisweek = preg_replace($pattern, '$1', $input);
-        return $jw->fetch_schedule($thisweek);
+        $week = preg_replace($pattern, '$1', $input);
+        if (!$jw->schedule_exists()) return $this->renew_schedule($jw);
+        return $jw->load_schedule($week);
+    }
+
+    public function renew_schedule($jw) {
+        $redis = new \Predis\Client();
+        if ($redis->exists('wechat:schedule:'.$jw->weixinID.':'.$jw->time)) return '正在进行处理，请稍后。';
+        $curl = curl_init();
+        $postfield = ['weixinID' => $jw->weixinID, 'time' => $jw->time];
+        $url = 'http://'.$_SERVER['HTTP_HOST'].'/renew_schedule.php';
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $postfield);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 1);
+        curl_exec($curl);
+        return '开始初始化课表。请等待一会再查看课表，获取速度视教务速度而定。';
     }
 }
