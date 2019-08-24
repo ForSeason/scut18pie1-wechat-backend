@@ -13,7 +13,7 @@ class Model {
                 DATABASE_PW, 
                 array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8')
             );
-            $this->link->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $this->link->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         } catch(\PDOException $e) {
             $this->throwException($e->getMessage()); 
         }
@@ -27,7 +27,7 @@ class Model {
                 DATABASE_PW, 
                 array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8')
             );
-            $this->link->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $this->link->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         } catch(\PDOException $e) {
             $this->throwException($e->getMessage()); 
         }
