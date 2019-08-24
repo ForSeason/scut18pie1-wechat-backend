@@ -86,8 +86,8 @@ class JWHelper {
         $pattern  = '/课表 (\d+?)/';
         $week = preg_replace($pattern, '$1', $input);
         if (!$jw->schedule_exists()) return $this->renew_schedule($jw);
-        $schedule = $jw->load_schedule($thisweek);
-        return $jw->format_schedule($schedule, $thisweek);
+        $schedule = $jw->load_schedule($week);
+        return $jw->format_schedule($schedule, $week);
     }
 
     public function renew_schedule($jw) {
