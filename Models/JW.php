@@ -129,7 +129,7 @@ class JW extends Model {
                     for ($i = $min; $i <= $max; $i++) $weeks[] = $i;
                     continue;
                 }
-                $pattern = '/^(\d+?)-(\d+?)周.+/';
+                $pattern = '/^(\d+?)-(\d+?)周.+$/';
                 if (preg_match($pattern, $str)) {
                     $min = preg_replace($pattern, '$1', $str);
                     $max = preg_replace($pattern, '$2', $str);
