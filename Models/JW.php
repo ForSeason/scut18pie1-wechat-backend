@@ -25,11 +25,30 @@ class JW extends Model {
     }
 
     public static function register($weixinID, $account, $password) {
-        $pdo    = new Model();
-        $sql    = 'INSERT INTO jw(weixinID,account,password) VALUES(?,?,?);';
-        $stmt   = $pdo->link->prepare($sql);
-        $status = $stmt->execute(array($weixinID, $account, $password));
-        if ($status) return 'Done.'; else return 'Unknown Error.';
+        $postfield = array(
+            'account'  => $account,
+            'password' => $password
+        );
+        $data = JW::JWcurl('/info', $postfield);
+        if (array_key_exists('message', $data)) {
+            return $data['message'];
+        } else {
+            $pdo    = new Model();
+            $sql    = 'INSERT INTO jw(weixinID,account,password) VALUES(?,?,?);';
+            $stmt   = $pdo->link->prepare($sql);
+            $status = $stmt->execute(array($weixinID, $account, $password));
+            if ($status) {
+                return 'Done.';
+            } else {
+                switch ($stmt->errorCode()) {
+                case '23000':
+                    return '已经绑定了一个账号，请先输入\'解除绑定教务\'取消旧账号绑定！';
+                    break;
+                default:
+                    return $stmt->errorCode();
+                }
+            }
+        }
     }
 
     public static function destroy($weixinID) {
@@ -37,7 +56,11 @@ class JW extends Model {
         $sql    = 'DELETE FROM jw WHERE weixinID=?;';
         $stmt   = $pdo->link->prepare($sql);
         $status = $stmt->execute(array($weixinID));
-        if ($status) return 'Done.'; else return 'Unknown Error.';
+        if ($status) return 'Done.';
+        switch ($stmt->errorCode()) {
+        default:
+            return $stmt->errorCode();
+        }
     }
 
     public function fetch_exam() {
@@ -119,20 +142,20 @@ class JW extends Model {
             foreach ($temp_arr as $str) {
                 $pattern = '/^(\d+?)周$/';
                 if (preg_match($pattern, $str)) {
-                    $weeks[] = preg_replace($pattern, '$1', $str);
+                    $weeks[] = (int)preg_replace($pattern, '$1', $str);
                     continue;
                 }
                 $pattern = '/^(\d+?)-(\d+?)周$/';
                 if (preg_match($pattern, $str)) {
-                    $min = preg_replace($pattern, '$1', $str);
-                    $max = preg_replace($pattern, '$2', $str);
+                    $min = (int)preg_replace($pattern, '$1', $str);
+                    $max = (int)preg_replace($pattern, '$2', $str);
                     for ($i = $min; $i <= $max; $i++) $weeks[] = $i;
                     continue;
                 }
                 $pattern = '/^(\d+?)-(\d+?)周.+$/';
                 if (preg_match($pattern, $str)) {
-                    $min = preg_replace($pattern, '$1', $str);
-                    $max = preg_replace($pattern, '$2', $str);
+                    $min = (int)preg_replace($pattern, '$1', $str);
+                    $max = (int)preg_replace($pattern, '$2', $str);
                     for ($i = $min; $i <= $max; $i += 2) $weeks[] = $i;
                     continue;
                 }

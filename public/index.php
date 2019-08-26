@@ -14,12 +14,12 @@ $token     = TOKEN;
 $signature = isset($_GET['signature'])? $_GET['signature']: '';
 $echostr   = isset($_GET['echostr'])? $_GET['echostr']: ''; 
 $array     = array($timestamp, $nonce, $token);
-sort($array); 
+sort($array, SORT_STRING); 
 $tmpstr = implode('', $array);
 $tmpstr = sha1($tmpstr);   
 if ($tmpstr == $signature && $echostr) {         
     echo $echostr;    
-    exit;  
+    exit;
 } else { 
     $postArr = file_get_contents('php://input');
     $postObj = simplexml_load_string($postArr);

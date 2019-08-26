@@ -74,8 +74,7 @@ foreach($arr as $day => $lessonList) {
         foreach ($lessonList as $lesson) {
             $str .= $lesson['name'].' '.
                 $lesson['room'].' '.
-                $lesson['period'].' '.
-                $lesson['teacher']."<br/>";
+                $lesson['period']."<br/>";
         } 
     }
     $item = [
