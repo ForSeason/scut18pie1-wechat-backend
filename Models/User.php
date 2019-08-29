@@ -44,6 +44,7 @@ class User extends Model {
             $res .= '学号：'.$row['studentID']."\r\n";
             $res .= '身份证号：'.$row['ID_card']."\r\n";
             $res .= '宿舍：'.$row['domitory'].$row['room']."\r\n";
+            $res .= '班干职位：'.$row['job']."\r\n";
             $res .= '是否舍长：'.$row['domitoryMaster']."\r\n";
             $res .= '电话：'.$row['phone']."\r\n";
             $res .= '家长姓名：'.$row['parentName']."\r\n";
