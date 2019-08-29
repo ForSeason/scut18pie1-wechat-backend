@@ -53,7 +53,7 @@ class Wechat {
 
     public function responseSubscribe($postObj){
         if (strtolower($postObj->Event == 'subscribe')){
-            $content='欢迎！输入“使用手册”可以查看本公众号的功能！';
+            $content='欢迎！到之前的文章里可以查看本公众号的功能！';
             $this->responseText($postObj, $content);
         }
     }

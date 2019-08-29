@@ -29,7 +29,7 @@ class JW extends Model {
             'account'  => $account,
             'password' => $password
         );
-        $data = JW::JWcurl('/info', $postfield);
+        $data = JW::JWcurl('/xsjw2018/info', $postfield);
         if (array_key_exists('message', $data)) {
             return $data['message'];
         } else {
@@ -70,7 +70,7 @@ class JW extends Model {
             'year' => EXAM_YEAR,
             'term' => EXAM_TERM
         );
-        $data = $this->JWcurl('/exam', $postfield);
+        $data = $this->JWcurl('/xsjw2018/exam', $postfield);
         if (!$data) return 'Unknown error.';
         if (array_key_exists('message', $data)) return $data['message'];
         $res = '';
@@ -90,7 +90,7 @@ class JW extends Model {
             'year' => SCORE_YEAR,
             'term' => SCORE_TERM
         );
-        $data = $this->JWcurl('/score', $postfield);
+        $data = $this->JWcurl('/xsjw2018/score', $postfield);
         if (!$data) return 'Unknown error.';
         if (array_key_exists('message', $data)) return $data['message'];
         $res = '';
@@ -110,7 +110,7 @@ class JW extends Model {
             'year' => SCHEDULE_YEAR,
             'term' => SCHEDULE_TERM
         );
-        $data = $this->JWcurl('/schedule', $postfield);
+        $data = $this->JWcurl('/xsjw2018/schedule', $postfield);
         if (!$data) return 'Unknown error.';
         if (array_key_exists('message', $data)) return $data['message'];
         $schedule = $this->parse_schedule($data['kbList']);
@@ -278,6 +278,27 @@ class JW extends Model {
             return $res;
         } catch(Exception $e) {
             return null;
+        }
+    }
+
+    public function school_bus() {
+        $curl = curl_init();
+        $url  = APIV2_BASEURL.'/bus/school?new';
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+        curl_setopt($curl, CURLOPT_NOBODY, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $data = json_decode(curl_exec($curl), true);
+        if ($data['status'] == 'ok') {
+            $res = ['N' => [], 'S' => []];
+            foreach($data['data'] as $code => $info) {
+                if (!$info['hidden']) {
+                    $res[$info['direction']][] = $info['station'];
+                }
+            }
+            return [true, $res];
+        } else {
+            return [false, null];
         }
     }
 }

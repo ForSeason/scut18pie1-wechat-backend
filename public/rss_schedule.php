@@ -5,8 +5,11 @@ require __DIR__."/../settings/general.php";
 use Models\JW as JW;
 use \Moell\Rss\Rss as Rss;
 
-$weixinID = $_GET['weixinID'];
-if (!$weixinID) return;
+if (isset($_GET['weixinID'])) {
+    $weixinID = $_GET['weixinID'];
+} else {
+    return;
+}
 
 $jw = new JW($weixinID, 23333);
 $thisweek = date("W", time()) - WEEK_START;
@@ -29,8 +32,10 @@ $channel = [
     ]
 ];
 $rss->channel($channel);
+
+//抬头简介
 $item = [
-    'title' => '课表    第'.$thisweek.'周',
+    'title' => '第'.$thisweek.'周',
     'description' => '来自18级光电一班复读姬',
     'source' => [
         'value' => '',
@@ -41,6 +46,38 @@ $item = [
 ];
 $rss->item($item);
 
+//校巴停靠
+$data = $jw->school_bus();
+if ($data[0]) {
+    $data = $data[1];
+    $str = '北区方向：';
+    if ($data['N']) {
+        $str .= implode(', ', $data['N']);
+        $str .= '<br/>';
+    } else {
+        $str .= '暂无校巴<br/>';
+    }
+    $str .= '南门方向：';
+    if ($data['S']) {
+        $str .= implode(', ', $data['S']);
+        $str .= '<br/>';
+    } else {
+        $str .= '暂无校巴';
+    }
+    $item = [
+        'title' => '北校校巴停靠',
+        'description' => $str,
+        'source' => [
+            'value' => '',
+            'attr' => [
+                'url' => ''
+            ]
+        ]
+    ];
+    $rss->item($item);
+}
+
+//下一节课
 $next_class = $jw->next_class($arr);
 if ($next_class[0]) {
     $item = [
@@ -67,6 +104,7 @@ if ($next_class[0]) {
 }
 $rss->item($item);
 
+//每日课表
 $bo = false;
 foreach($arr as $day => $lessonList) {
     if ($lessonList != array()) {
