@@ -93,13 +93,11 @@ class UserInfo {
     }
 
     public function checkMyDP($weixinID) {
-        $username = $this->user->weixinID2username($weixinID);
-        return Point::fetchP($username, 'd');
+        return Point::fetchP($weixinID, 'd');
     }
 
     public function checkMyWP($weixinID) {
-        $username = $this->user->weixinID2username($weixinID);
-        return Point::fetchP($username, 'w');
+        return Point::fetchP($weixinID, 'w');
     }
 
     public function checkOneDP($username) {
