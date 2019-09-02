@@ -48,6 +48,9 @@ class UserInfo {
         $pattern  = '/^查询 文体分$/';
         if (preg_match($pattern, $input)) return $this->checkMyWP($weixinID);
 
+        $pattern  = '/^查询 智育分$/';
+        if (preg_match($pattern, $input)) return $this->checkMyZP($weixinID);
+
         $pattern  = '/^查询 德育分 (.*)$/';
         $tempstr  = preg_replace($pattern, '$1', $input);
         if (preg_match($pattern, $input)) return $this->checkOneDP($tempstr);
@@ -56,17 +59,27 @@ class UserInfo {
         $tempstr  = preg_replace($pattern, '$1', $input);
         if (preg_match($pattern, $input)) return $this->checkOneWP($tempstr);
 
+        $pattern  = '/^查询 智育分 (.*)$/';
+        $tempstr  = preg_replace($pattern, '$1', $input);
+        if (preg_match($pattern, $input)) return $this->checkOneZP($tempstr);
+
         $pattern  = '/^加德育分 ([^ ]*?) ([^ ]*?) (.*)$/';
         if (preg_match($pattern, $input)) return $this->addDP($input);
 
         $pattern  = '/^加文体分 ([^ ]*?) ([^ ]*?) (.*)$/';
         if (preg_match($pattern, $input)) return $this->addWP($input);
 
+        $pattern  = '/^加智育分 ([^ ]*?) ([^ ]*?) (.*)$/';
+        if (preg_match($pattern, $input)) return $this->addZP($input);
+
         $pattern = '/^删除 德育分 (.*)$/';
         if (preg_match($pattern, $input)) return $this->delDP($input);
 
         $pattern = '/^删除 文体分 (.*)$/';
         if (preg_match($pattern, $input)) return $this->delWP($input);
+
+        $pattern = '/^删除 智育分 (.*)$/';
+        if (preg_match($pattern, $input)) return $this->delZP($input);
 
         $pattern  = '/^查询 事件$/';
         if (preg_match($pattern, $input)) return $this->checkEvents();
@@ -100,6 +113,10 @@ class UserInfo {
         return Point::fetchP($weixinID, 'w');
     }
 
+    public function checkMyZP($weixinID) {
+        return Point::fetchP($weixinID, 'z');
+    }
+
     public function checkOneDP($username) {
         if ($this->authority < 2) return '权限不足！';
         $weixinID = User::username2WeixinID($username);
@@ -110,6 +127,12 @@ class UserInfo {
         if ($this->authority < 2) return '权限不足！';
         $weixinID = User::username2WeixinID($username);
         return Point::fetchP($weixinID, 'w');
+    }
+
+    public function checkOneZP($username) {
+        if ($this->authority < 2) return '权限不足！';
+        $weixinID = User::username2WeixinID($username);
+        return Point::fetchP($weixinID, 'z');
     }
 
     public function addDP($input) {
@@ -124,6 +147,12 @@ class UserInfo {
         return $this->addP_handle($input, $pattern, 'w');
     }
 
+    public function addZP($input) {
+        if ($this->authority < 3) return '权限不足！';
+        $pattern = '/^加文体分 ([^ ]*?) ([^ ]*?) (.*)$/';
+        return $this->addP_handle($input, $pattern, 'z');
+    }
+
     public function delDP($input) {
         if ($this->authority < 3) return '权限不足！';
         $pattern = '/^删除 德育分 (.*)$/';
@@ -134,6 +163,12 @@ class UserInfo {
         if ($this->authority < 3) return '权限不足！';
         $pattern = '/^删除 文体分 (.*)$/';
         return $this->delP_handle($input, $pattern, 'w');
+    }
+
+    public function delZP($input) {
+        if ($this->authority < 3) return '权限不足！';
+        $pattern = '/^删除 文体分 (.*)$/';
+        return $this->delP_handle($input, $pattern, 'z');
     }
 
     public function addP_handle($input, $pattern, $type) {
@@ -171,6 +206,9 @@ class UserInfo {
         $res .= "-------------------\r\n";
         $res .= '文体分:'."\r\n\r\n";
         $res .= Point::getEvents('w');
+        $res .= "-------------------\r\n";
+        $res .= '智育分:'."\r\n\r\n";
+        $res .= Point::getEvents('z');
         return $res;
     }
 }
