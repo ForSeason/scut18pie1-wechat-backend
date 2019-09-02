@@ -149,7 +149,7 @@ class UserInfo {
 
     public function addZP($input) {
         if ($this->authority < 3) return '权限不足！';
-        $pattern = '/^加文体分 ([^ ]*?) ([^ ]*?) (.*)$/';
+        $pattern = '/^加智育分 ([^ ]*?) ([^ ]*?) (.*)$/';
         return $this->addP_handle($input, $pattern, 'z');
     }
 
@@ -167,7 +167,7 @@ class UserInfo {
 
     public function delZP($input) {
         if ($this->authority < 3) return '权限不足！';
-        $pattern = '/^删除 文体分 (.*)$/';
+        $pattern = '/^删除 智育分 (.*)$/';
         return $this->delP_handle($input, $pattern, 'z');
     }
 
