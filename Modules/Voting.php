@@ -88,7 +88,7 @@ class Voting {
 
     public function fetchVotes() {
         $arr = Vote::fetch_votes();
-        return ($arr == array())? 'No result.': implode(' ', $arr);
+        return ($arr == array())? 'No result.': implode(', ', $arr);
     }
 
     public function getVoteInfo($input, $username) {
@@ -99,7 +99,7 @@ class Voting {
         } else {
             $vote = new Vote($username, $class);
             $res  = '发起人: '.$vote->creator."\r\n".count($vote->list).'人: ';
-            $res .= (implode(', ',$vote->list) == '')?'no member': implode(', ',$vote->list);
+            $res .= (implode(', ',$vote->list) == '')?'no member': implode(' ',$vote->list);
         }
         return $res;
     }
