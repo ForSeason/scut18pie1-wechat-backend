@@ -1,0 +1,4 @@
+<?php
+define('TULING_APIKEY', "");
+define('TULING_SECRET', "");
+define('TULING_ACTIVE', false);

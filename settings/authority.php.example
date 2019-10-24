@@ -1,0 +1,8 @@
+<?php 
+define('AUTHORITY_LIST', json_encode(array(
+    "oKldy5yGdkZnvBJOKH8C7hYRql4U" => 3,
+    "oKldy561oiZ45NTIBeHKCv0MNn28" => 2,
+    "oKldy5wCd1sbJ8CjZnaX1u5OvR4c" => 2,
+    "oo8bx02TV_scfqaOqD35fjh_RUmc" => 3,
+    "oKldy56d0F7jhWrEFjjSx4vynQFQ" => 2
+), 320));
