@@ -88,7 +88,7 @@ class Voting {
 
     public function fetchVotes() {
         $arr = Vote::fetch_votes();
-        return ($arr == array())? 'No result.': implode(', ', $arr);
+        return ($arr == array())? 'No result.': implode(' ', $arr);
     }
 
     public function getVoteInfo($input, $username) {
