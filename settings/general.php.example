@@ -9,6 +9,7 @@ define('DATABASE_PW', '');
 define('STATIC_TEXT', 'assets/static_text.json');
 
 define('APIV2_BASEURL', '');
+define('YEAR', 2019);
 define('EXAM_YEAR', 2018);
 define('EXAM_TERM', 2);
 define('SCORE_YEAR', 2018);

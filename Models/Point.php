@@ -10,9 +10,9 @@ class Point extends Model {
      */
     public function fetchP($weixinID, $type) {
         $pdo  = new Model();
-        $sql  = "SELECT * FROM ".$type."p WHERE weixinID=?;";
+        $sql  = "SELECT * FROM ".$type."p WHERE weixinID=? and year=?;";
         $stmt = $pdo->link->prepare($sql);
-        $stmt->execute(array($weixinID));
+        $stmt->execute(array($weixinID, YEAR));
         $arr  = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $res  = '';
         foreach ($arr as $row) {
@@ -26,9 +26,9 @@ class Point extends Model {
         $res = 0;
         if ($weixinID != 'unknown'){
             $pdo  = new Model();
-            $sql  = "INSERT INTO ".$type."p(weixinID,point,info) VALUES(?,?,?);";
+            $sql  = "INSERT INTO ".$type."p(weixinID,point,info,year) VALUES(?,?,?,?);";
             $stmt = $pdo->link->prepare($sql);
-            $res += $stmt->execute(array($weixinID, $point, $info));
+            $res += $stmt->execute(array($weixinID, $point, $info, YEAR));
         }
         return $res;
     }
