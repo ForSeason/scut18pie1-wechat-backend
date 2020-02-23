@@ -1,3 +1,5 @@
 /vendor
 *.swp
 /settings/*.php
+/public/assets/*.csv
+/public/assets/*.docx

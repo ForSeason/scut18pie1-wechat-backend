@@ -16,6 +16,7 @@ class Model {
             $this->link->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         } catch(\PDOException $e) {
             $this->throwException($e->getMessage()); 
+            exit();
         }
     }
     
@@ -30,6 +31,7 @@ class Model {
             $this->link->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         } catch(\PDOException $e) {
             $this->throwException($e->getMessage()); 
+            exit();
         }
     }
 

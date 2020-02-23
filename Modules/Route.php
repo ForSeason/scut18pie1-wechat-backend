@@ -7,6 +7,20 @@ class Route {
 
     public function router($postObj) {
         // self::responseInstructions($postObj);
+        $MS = new ModeSwitcher($postObj);
+        $this->responded = $MS->process($postObj);
+        if ($this->responded) exit;
+        
+        $redis = new \Predis\Client();
+        if ($redis->exists($postObj->FromUserName.':mode')) {
+            $mode = $redis->get($postObj->FromUserName.':mode');
+            if ($mode == 'maogai') {
+                $maogai = new Maogai($postObj);
+                $maogai->process($postObj);
+            }
+            exit;
+        }
+        
         $static_text = new StaticText();
         $this->responded = $static_text->roll($postObj);
         if ($this->responded) exit;
