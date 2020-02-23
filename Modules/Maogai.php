@@ -21,9 +21,8 @@ class Maogai {
     public function roll($postObj) {
         $input    = $postObj->Content;
         $weixinID = $postObj->FromUserName;
-        /*
-         *  下面开始检测用户是否使用如下业务
-         */
+        if (User::weixinID2username($weixinID) == 'unknown') return '非注册用户不得使用该功能！';
+
         $pattern  = '/^[A-Za-z]+$/';
         if (preg_match($pattern, $input)) return $this->answer($input);
 
@@ -98,8 +97,12 @@ class Maogai {
     }
 
     public static function getData() {
+        $redis = new \Predis\Client();
+        if ($redis->exists('maogai:'.MAOGAI_FILE)) {
+            return unserialize($redis->get('maogai:'.MAOGAI_FILE));
+        }
         $data = require_once __DIR__.'/../scripts/maogai.php';
-        var_dump($data);
+        $redis->set('maogai:'.MAOGAI_FILE, serialize($data));
         return $data;
     }
 }
