@@ -14,7 +14,7 @@ preg_match_all($pattern1, $docx, $rawQ);
 //解析题目
 $question = [];
 $pattern2 = '/(\d+)、(.*)/';
-$pattern3 = '/([A-Za-z])[ 、，。,．\.]+([^ \n\r]+)/';
+$pattern3 = '/([A-Za-z])[ 、，。,．\.\t]+([^ \n\r]+)/';
 $pattern4 = '/答案.*?([A-Za-z]+)/';
 $pattern5 = '/([A-Za-z])/';
 foreach($rawQ[0] as $str) {
