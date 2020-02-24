@@ -37,8 +37,9 @@ class ModeSwitcher {
     }
 
     protected function maogai() {
+        if (!MAOGAI_ON) return '现在暂未开放';
         if ($this->redis->exists($this->user->weixinID.':mode')) return '请先退出目前模式';
-        if ($this->redis->exists($this->user->weixinID.':maogai:id')) {
+        if ($this->redis->exists($this->user->weixinID.':maogai:'.MAOGAI_FILE.':id')) {
             return '继续上次进度.';
         }
         if ($this->redis->exists($this->user->weixinID.':completed:'.MAOGAI_FILE)) {

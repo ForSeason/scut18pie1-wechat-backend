@@ -18,6 +18,7 @@ define('SCHEDULE_YEAR', 2019);
 define('SCHEDULE_TERM', 1);
 define('WEEK_START', 34);
 define('MAOGAI_FILE', '');
+define('MAOGAI_ON', false);
 
 
 define('TEMPLATE_TEXT', "
