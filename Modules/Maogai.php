@@ -44,7 +44,7 @@ class Maogai {
         $out = fopen(__DIR__.'/../public/assets/'.date('Ymd').'.csv', 'a+');
         if ($a == $q[$id]['answer']) {
             fputcsv($out, [
-                $id+1, 
+                $q[$id]['number'],
                 $q[$id]['type'],
                 $this->user->weixinID2username($this->user->weixinID),
                 $input,
@@ -52,7 +52,7 @@ class Maogai {
             ]);
         } else {
             fputcsv($out, [
-                $id+1, 
+                $q[$id]['number'],
                 $q[$id]['type'],
                 $this->user->weixinID2username($this->user->weixinID),
                 $input,
