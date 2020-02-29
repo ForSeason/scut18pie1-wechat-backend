@@ -31,8 +31,8 @@ class Maogai {
 
     public function answer($input) {
         $input = strtoupper($input);
-        if (!$this->redis->exists($this->user->weixinID.':maogai:".MAOGAI_FILE.":id')) return '系统出错： 缺失毛概标识符';
-        $id = $this->redis->get($this->user->weixinID.':maogai:".MAOGAI_FILE.":id');
+        if (!$this->redis->exists($this->user->weixinID.':maogai:'.MAOGAI_FILE.':id')) return '系统出错： 缺失毛概标识符';
+        $id = $this->redis->get($this->user->weixinID.':maogai:'.MAOGAI_FILE.':id');
         $pattern = '/([A-Za-z])/';
         preg_match_all($pattern, $input, $arr);
         $a = [];
@@ -62,11 +62,11 @@ class Maogai {
         fclose($out);
         if (!isset($q[++$id])) {
             $this->redis->del($this->user->weixinID.':mode');
-            $this->redis->del($this->user->weixinID.':maogai:".MAOGAI_FILE.":id');
+            $this->redis->del($this->user->weixinID.':maogai:'.MAOGAI_FILE.':id');
             $this->redis->set($this->user->weixinID.':completed:'.MAOGAI_FILE, 1);
             return '答题完毕，退出答题模式。';
         }
-        $this->redis->set($this->user->weixinID.':maogai:".MAOGAI_FILE.":id', $id);
+        $this->redis->set($this->user->weixinID.':maogai:'.MAOGAI_FILE.':id', $id);
         $result = $q[$id]['type'].'#'.$q[$id]['title']."\r\n";
         foreach ($q[$id]['questions'] as $v) {
             $result .= $v['option'].". ".$v['content']."\r\n";
@@ -86,7 +86,7 @@ class Maogai {
 
     public static function init($weixinID) {
         $redis = new \Predis\Client();
-        $redis->set($weixinID.':maogai:".MAOGAI_FILE.":id', 0);
+        $redis->set($weixinID.':maogai:'.MAOGAI_FILE.':id', 0);
         $redis->set($weixinID.':mode', 'maogai');
         $q = self::getData();
         $result = $q[0]['type'].'#'.$q[0]['title']."\r\n";
