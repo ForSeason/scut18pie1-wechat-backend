@@ -8,15 +8,15 @@ $docx = $text->extract();
 // $docx = urldecode($docx);
 
 // 分离题目
-$pattern1 = '/\d+?、[\s\S]*?答案[\s\S]*?[A-Za-z]+/';
+$pattern1 = '/\d+?、[\s\S]*?答案[\s\S]*?[A-Za-z]+/u';
 preg_match_all($pattern1, $docx, $rawQ);
 
 //解析题目
 $question = [];
-$pattern2 = '/(\d+)、(.*)/';
-$pattern3 = '/([A-Za-z])[ 、，。,．\.\t]+([^ \n\r]+)/';
-$pattern4 = '/答案.*?([A-Za-z]+)/';
-$pattern5 = '/([A-Za-z])/';
+$pattern2 = '/(\d+)、(.*)/u';
+$pattern3 = '/([A-Za-z])[ 、，。,．\.\t]+([^ \n\r]+)/u';
+$pattern4 = '/答案.*?([A-Za-z]+)/u';
+$pattern5 = '/([A-Za-z])/u';
 foreach($rawQ[0] as $str) {
     preg_match_all($pattern2, $str, $arr2);
     preg_match_all($pattern3, $str, $arr3);
