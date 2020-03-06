@@ -27,7 +27,7 @@ class Maogai {
         // if (preg_match($pattern, $input)) return $this->answer($input);
 
         $pattern  = '/^毛概$/';
-        if (preg_match($pattern, $input)) return $_SERVER['SERVER_NAME']."/maogai.html";
+        if (preg_match($pattern, $input)) return $_SERVER['SERVER_NAME']."/maogai.html?weixinID=".urlencode($weixinID);
 
         // return $this->repeat();
         return false;
