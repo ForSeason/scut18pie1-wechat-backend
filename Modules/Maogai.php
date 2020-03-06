@@ -21,12 +21,16 @@ class Maogai {
     public function roll($postObj) {
         $input    = $postObj->Content;
         $weixinID = $postObj->FromUserName;
-        if (User::weixinID2username($weixinID) == 'unknown') return '非注册用户不得使用该功能！';
+        // if (User::weixinID2username($weixinID) == 'unknown') return '非注册用户不得使用该功能！';
 
-        $pattern  = '/^[A-Za-z]+$/';
-        if (preg_match($pattern, $input)) return $this->answer($input);
+        // $pattern  = '/^[A-Za-z]+$/';
+        // if (preg_match($pattern, $input)) return $this->answer($input);
 
-        return $this->repeat();
+        $pattern  = '/^毛概$/';
+        if (preg_match($pattern, $input)) return $_SERVER['SERVER_NAME']."/maogai.html";
+
+        // return $this->repeat();
+        return false;
     }
 
     public function answer($input) {

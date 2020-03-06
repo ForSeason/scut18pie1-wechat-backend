@@ -15,6 +15,7 @@ class Model {
             );
             $this->link->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         } catch(\PDOException $e) {
+            http_response_code(500);
             $this->throwException($e->getMessage()); 
             exit();
         }
@@ -36,6 +37,6 @@ class Model {
     }
 
   	public function throwException($info = '') {
-  		echo $info;
+  		echo json_encode(['message' => $info]);
   	}
 }
