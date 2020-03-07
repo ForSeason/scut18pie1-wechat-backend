@@ -302,13 +302,13 @@
                   text = '提交成功,可以退出了哟!';
                 } else {
                   text = xhr.status + ' ' + xhr.statusText + '  请重新提交哦!';
-                  $('body').append(`
-                    <div id="hint">${text}</div>
-                  `)
-                  setTimeout(() => {
-                    $('#hint').remove();
-                  }, 1500);
                 }
+                $('body').append(`
+                  <div id="hint">${text}</div>
+                `);
+                setTimeout(() => {
+                  $('#hint').remove();
+                }, 1500);
               },
               error: function (err) {
                 console.log(err);
