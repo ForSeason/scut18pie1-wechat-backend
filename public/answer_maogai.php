@@ -7,9 +7,13 @@ use \Models\User;
 
 $user = new User('123');
 
+$data = file_get_contents('php://input');
+$data = json_decode($data, TRUE);
+
 if (!MAOGAI_ON || 
-    !isset($_POST['weixinID']) || 
-    $user->weixinID2username($_POST['weixinID']) == 'unknown'
+    !$data ||
+    !isset($data['weixinID']) || 
+    $user->weixinID2username($data['weixinID']) == 'unknown'
 ) {
     header('HTTP/1.1 403 Forbidden');
     echo 'GUNAAAAAAAA~~~~!!!';
@@ -18,33 +22,33 @@ if (!MAOGAI_ON ||
 
 $redis = new \Predis\Client();
 
-if ($redis->exists($_POST['weixinID'].":completed:".MAOGAI_FILE)) {
+if ($redis->exists($data['weixinID'].":completed:".MAOGAI_FILE)) {
     header('HTTP/1.1 403 Forbidden');
     echo '不能重复做题！！！！！';
     exit;
 }
 
-$answers = $_POST['answers'] ?? [];
-$data = require_once __DIR__.'/../scripts/maogai.php';
+$answers = $data['answer'] ?? [];
+$origin = require_once __DIR__.'/../scripts/maogai.php';
 $out = fopen(__DIR__.'/assets/'.date('Ymd').'.csv', 'a+');
 foreach ($answers as $ans) {
-    foreach ($data as $q) {
+    foreach ($origin as $q) {
         if ($ans['type'] == $q['type'] && $ans['number'] == $q['number']) {
             if ($ans['answer'] == $q['answer']) {
                 fputcsv($out, [
-                    $q['number'],
-                    $q['type'],
-                    $user->weixinID2username($_POST['weixinID']),
-                    $ans['answer'],
+                    $ans['number'],
+                    $ans['type'],
+                    $user->weixinID2username($data['weixinID']),
+                    implode("", $ans['answer']),
                     '正确',
-                    ($q['type'] == '单选')? 2: 4
+                    ($ans['type'] == '单选')? 2: 4
                 ]);
             } else {
                 fputcsv($out, [
-                    $q['number'],
-                    $q['type'],
-                    $user->weixinID2username($_POST['weixinID']),
-                    $ans['answer'],
+                    $ans['number'],
+                    $ans['type'],
+                    $user->weixinID2username($data['weixinID']),
+                    implode("", $ans['answer']),
                     '错误',
                     0
                 ]);
@@ -52,6 +56,7 @@ foreach ($answers as $ans) {
         }
     }
 }
+fclose($out);
 
 header('HTTP/1.1 200 OK');
-$redis->set($_POST['weixinID'].":completed:".MAOGAI_FILE, 1);
+$redis->set($data['weixinID'].":completed:".MAOGAI_FILE, 1);

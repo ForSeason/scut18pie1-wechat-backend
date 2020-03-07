@@ -97,8 +97,9 @@
       align-items: center;
     }
     input[type="radio"]:checked + label, input[type="checkbox"]:checked + label {
-      color:rgb(30, 160, 250);
-      border: 1px solid rgb(30, 160, 250);
+      color:#fff;
+      border:none;
+      background-color: rgb(30, 160, 250);
     }
     .subject-option-text {
       display:block;
@@ -144,7 +145,7 @@
     
   </div>
   <script>
-    var false_data = [
+    var false_data = `[
       {
         "number":"1",
         "title":"中国革命的中心问题，也是新民主主义革命理论的核心问题是（ ）\r",
@@ -191,23 +192,59 @@
           "answer":["B","C","D"],
           "type":"多选"
         }
-      ]
+      ]`;
     var weixinID = getUrlParam('weixinID')? getUrlParam('weixinID') : 'oKldy5yGdkZnvBJOKH8C7hYRql4U';
       $.ajax({
-      url: 'https://weixin.scut18pie1.top/get_maogai.php?weixinID=' + weixinID, 
+      url: 'https://weixin.scut18pie1.top/get_maogai.php?weixinID=' + weixinID, // 'https://weixin.scut18pie1.top/get_maogai.php?weixinID=' + 'oKldy5yGdkZnvBJOKH8C7hYRql4U' http://127.0.0.1:8080/start?weixinID=' + 'oKldy5yGdkZnvBJOKH8C7hYRql4U'
       data: {
       },
       xhrFields: {
-        withCredentials: true
+        withCredentials: true,
+        "Content-Type": "application/json"
       },
       crossDomain: true,
-      success: function (data) {
+      success: function (data, status, xhr) {
         console.log(data);
-        renderData(JSON.parse(data.replace(/(\\r|\s)/g,'')));
+        console.log(status);
+        console.log(xhr.status);
+        if (xhr.status === 200) {
+          console.log(JSON.parse(data.replace(/(\\r|\s)/g,'')));
+          renderData(JSON.parse(data.replace(/(\\r|\s)/g,'')));
+        } else if (xhr.status === 403) {
+          $('body').empty();
+          $('body').append(`
+          <div>不可以重复提交哦!</div>
+          `);
+        } else if (xhr.status === 500) {
+          $('body').append(`
+            <div id="hint">服务器出错,请和管理员联系</div>
+          `)
+          setTimeout(() => {
+            $('#hint').remove();
+          }, 1500);
+        } else {
+          console.log(data);
+          console.log(xhr.status);
+        }
       },
       error: function (err, text) {
         console.log(err.status);
-        renderData(false_data);
+        if (err.status === 403) {
+          $('body').empty();
+          $('body').append(`
+          <div style="position:absolute;top:30vw;width:100vw; text-align:center;">不可以重复提交哦!</div>
+          `);
+        } else if (err.status === 500) {
+          $('body').append(`
+            <div id="hint">服务器出错,请和管理员联系</div>
+          `)
+          setTimeout(() => {
+            $('#hint').remove();
+          }, 1500);
+        } else {
+          console.log(err);
+        }
+        // renderData(JSON.parse(false_data.replace(/(\\r|\s)/g,'')));
         console.log(text);
       }
     })
@@ -247,7 +284,7 @@
           console.log(form_data);
           if (form_data) {
             $.ajax({
-              url: 'https://weixin.scut18pie1.top/answer_maogai.php', // http://weixin.scut18pie1.top/answer_maogai.php  http://127.0.0.1:3000/submit
+              url: 'https://weixin.scut18pie1.top/answer_maogai.php', // https://weixin.scut18pie1.top/answer_maogai.php  http://127.0.0.1:8080/submit
               method: 'POST',
               headers: {
                 'Content-Type': 'multipart/form-data',
@@ -257,12 +294,16 @@
                 // withCredentials: true
               },
               crossDomain: true,
-              success: function (data, status) {
+              success: function (data, status,xhr) {
                 console.log(data);
                 console.log(status);
-                if (status === 'success') {
+                var text;
+                if (xhr.status === 200) {
+                  text = '提交成功,可以退出了哟!';
+                } else {
+                  text = xhr.status + ' ' + xhr.statusText + '  请重新提交哦!';
                   $('body').append(`
-                    <div id="hint">提交成功,可以退出了哟!</div>
+                    <div id="hint">${text}</div>
                   `)
                   setTimeout(() => {
                     $('#hint').remove();
@@ -271,10 +312,17 @@
               },
               error: function (err) {
                 console.log(err);
+                var text = err.status + ' ' +err.statusText + '  请重新提交哦!';
+                $('body').append(`
+                    <div id="hint">${text}</div>
+                `)
+                setTimeout(() => {
+                  $('#hint').remove();
+                }, 1500);
               }
             })
           } else {
-            alert('有题目未填写哦!')
+            alert('有题目未填写,或者多选单选哦!')
           }
         }
       }
