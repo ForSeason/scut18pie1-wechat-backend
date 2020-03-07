@@ -8,7 +8,7 @@ use \Models\User;
 $user = new User('123');
 
 if (!MAOGAI_ON || 
-    !isset($_GET['weixinID']) || 
+    !isset($_GET['weixinID'])
 ) {
     header('HTTP/1.1 403 Forbidden');
     echo 'GUNAAAAAAAA~~~~!!!';
