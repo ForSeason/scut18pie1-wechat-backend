@@ -2,6 +2,11 @@
 include_once __DIR__."/docx2text.php";
 include_once __DIR__."/../settings/general.php";
 
+$redis = new \Predis\Client();
+if ($redis->exists(MAOGAI_FILE)) {
+    return json_decode($redis->get(MAOGAI_FILE));
+}
+
 $text = new Docx2Text();
 $text->setDocx(__DIR__.MAOGAI_FILE);
 $docx = $text->extract();
@@ -39,5 +44,7 @@ foreach($rawQ[0] as $str) {
         'type' => isset($a[1])? '多选': '单选',
     ];
 }
+
+$redis->set(MAOGAI_FILE, json_encode($question));
 
 return $question;
