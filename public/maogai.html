@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>毛概答题</title>
+  <style>
+    * {
+      padding:0;
+      margin:0;
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:raba(0, 0, 0, 0);
+    }
+    .view {
+      width:100vw;
+      height:100vh;
+      overflow-y:auto;
+      overflow-x:hidden;
+      background-color: #E7EAED;
+    }
+    .title {
+      text-align: center;
+      font-size:5vw;
+      padding:5vw;
+    }
+    .subject-box {
+      width:90vw;
+      min-height:50vw;
+      margin: 0 auto;
+      margin-top:5vw;
+      /* border: 1px solid rgb(117, 193, 223); */
+      border-radius:2vw;
+      display:flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items:center;
+      background-color: #fff;
+    }
+    .subject {
+      width:80vw;
+      min-height:15vw;
+      padding-top:5vw;
+      font-size:4vw;
+      line-height:8vw;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
+    }
+    .subject > span {
+      padding:1vw 2vw;
+      margin:0 2vw;
+      border: 1px solid rgb(30, 160, 250);
+      color:rgb(30, 160, 250);
+      border-radius: 1vw;
+    }
+    .subject-option-box {
+      width:80vw;
+      display:flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items:center;
+      margin-bottom:5vw;
+    }
+    .subject-option {
+      width:80vw;
+      margin-top:5vw;
+      display:flex;
+      justify-content: space-around;
+      align-items:center;
+    }
+    .radio-box {
+      width:10vw;
+      height:10vw;
+      margin:0;
+      display:flex;
+      justify-content:center;
+      align-items: center;
+    }
+    input[type="radio"], input[type="checkbox"] {
+      width:0;
+      height:0;
+      margin:0;
+      opacity:0;
+    }
+    input[type="radio"] + label, input[type="checkbox"] + label {
+      width:60%;
+      height:60%;
+      border-radius:1vw;
+      font-size:3vw;
+      border:1px solid gray;
+      color:gray;
+      transition:all 0.3s ease;
+      display:flex;
+      justify-content: center;
+      align-items: center;
+    }
+    input[type="radio"]:checked + label, input[type="checkbox"]:checked + label {
+      color:rgb(30, 160, 250);
+      border: 1px solid rgb(30, 160, 250);
+    }
+    .subject-option-text {
+      display:block;
+      width:70vw;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+    .button {
+      width:20vw;
+      height:8vw;
+      line-height: 8vw;
+      font-size:4vw;
+      background-color: rgb(30, 160, 250);
+      color:#fff;
+      border-radius: 2vw;
+      margin:0 auto;
+      margin-top:5vw;
+      margin-bottom:5vw;
+      text-align: center;
+    }
+    #hint {
+      padding:2vw;
+      background-color: rgba(0, 0, 0, 0.692);
+      border-radius: 2vw;
+      color:#fff;
+      font-size:3.5vw;
+      text-align: center;
+      white-space:nowrap;
+      position:absolute;
+      bottom:10vw;
+      left:50%;
+      transform:translate(-50%, -50%);
+      -webkit-transform:translate(-50%, -50%);
+    }
+  </style>
+  <script src="jquery.js"></script>
+</head>
+<body>
+  <!-- <h1 class="title">毛概答题</h1> -->
+  <div class="view">
+    
+  </div>
+  <script>
+    var false_data = [
+      {
+        "number":"1",
+        "title":"中国革命的中心问题，也是新民主主义革命理论的核心问题是（ ）\r",
+        "questions":[
+          {"option":"A","content":"土地问题"},
+          {"option":"B","content":"无产阶级的领导权"},
+          {"option":"C","content":"统一战线问题"},
+          {"option":"D","content":"革命道路问题"}
+        ],
+        "answer":["B"],"type":"单选"
+      },
+      {
+        "number":"2",
+        "title":"近代中国的社会性质和主要矛盾决定了中国革命仍然是（ ）。\r",
+        "questions":[
+          {"option":"A","content":"无产阶级革命"},
+          {"option":"B","content":"旧民主主义革命"},
+          {"option":"C","content":"资产阶级民主革命"},
+          {"option":"D","content":"社会主义革命"}
+        ],
+        "answer":["C"],
+        "type":"单选"},
+        {
+          "number":"3",
+          "title":"下列不属于近代中国革命根本任务的是（ ）。\r",
+          "questions":[
+            {"option":"A","content":"建立人民民主专政"},
+            {"option":"B","content":"推翻帝国主义"},
+            {"option":"C","content":"推翻官僚资本主义"},
+            {"option":"D","content":"推翻封建主义"}
+          ],
+          "answer":["A"],
+          "type":"单选"
+        },
+        {
+          "number":"4",
+          "title":"中国无产阶级的特点和优点包括( )。\r",
+          "questions":[
+            {"option":"A","content":"不占有任何生产资料"},
+            {"option":"B","content":"深受三座大山的压迫，革命性极强"},
+            {"option":"C","content":"分布集中"},
+            {"option":"D","content":"与农民有天然的联系"}
+          ],
+          "answer":["B","C","D"],
+          "type":"多选"
+        }
+      ]
+    var weixinID = getUrlParam('weixinID')? getUrlParam('weixinID') : 'oKldy5yGdkZnvBJOKH8C7hYRql4U';
+      $.ajax({
+      url: 'https://weixin.scut18pie1.top/get_maogai.php?weixinID=' + weixinID, // 'https://weixin.scut18pie1.top/get_maogai.php?weixinID=' + 'oKldy5yGdkZnvBJOKH8C7hYRql4U' http://127.0.0.1:3000/start?weixinID=' + 'oKldy5yGdkZnvBJOKH8C7hYRql4U'
+      data: {
+      },
+      xhrFields: {
+        withCredentials: true,
+        "Content-Type": "application/json"
+      },
+      crossDomain: true,
+      success: function (data) {
+        console.log(data);
+        renderData(data);
+      },
+      error: function (err, text) {
+        console.log(err.status);
+        renderData(false_data);
+        console.log(text);
+      }
+    })
+    function renderData (data) {
+      for (var i = 0; i < data.length; i++) {
+        var option_type = data[i].type === '单选' ? 'radio' : 'checkbox';
+        var text = `
+        <div class="subject-box">
+          <div class="subject">
+            <span>${data[i].type}题</span>${data[i].number}. ${data[i].title || '题目'}
+          </div>
+          <div class="subject-option-box">
+        `;
+        for (var j = 0; j < data[i].questions.length; j++) {
+          text +=  
+           `<label class="subject-option">
+              <div class="radio-box">
+                <input type="${option_type}" id="subject${i}-${j}" name="subject${i}" v-model="registerData.value" value="${data[i].questions[j].option}"/>
+                <label for="subject${i}-${j}">${data[i].questions[j].option}</label>
+              </div>
+              <div class="subject-option-text" for="subject1">
+                ${data[i].questions[j].content || '选项'+ j}
+              </div>
+            </label>`;
+        }
+        text +=
+        `
+          </div>
+        </div>
+        `
+        $('.view').append(text);
+      }
+      $('.view').append('<div class="button">提交</div>');
+      document.querySelector('.button').onclick = function () {
+        if (confirm('是否提交')) {
+          var form_data = collectData(data);
+          console.log(form_data);
+          if (form_data) {
+            $.ajax({
+              url: 'http://weixin.scut18pie1.top/answer_maogai.php', // http://weixin.scut18pie1.top/answer_maogai.php  http://127.0.0.1:3000/submit
+              method: 'POST',
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+              data: JSON.stringify(form_data),
+              xhrFields: {
+                // withCredentials: true
+              },
+              crossDomain: true,
+              success: function (data, status) {
+                console.log(data);
+                console.log(status);
+                if (status === 'success') {
+                  $('body').append(`
+                    <div id="hint">提交成功,可以退出了哟!</div>
+                  `)
+                  setTimeout(() => {
+                    $('#hint').remove();
+                  }, 1500);
+                }
+              },
+              error: function (err) {
+                console.log(err);
+              }
+            })
+          } else {
+            alert('有题目未填写哦!')
+          }
+        }
+      }
+    }
+    function collectData(data) {
+      var post_data = {
+        weixinID: getUrlParam('weixinID'),
+        answer: [
+          {
+            number: '',
+            type:'',
+            answer: [
+
+            ]
+          }
+        ]
+      }
+      console.log($('input[name^="subject"]:checked'));
+      var output_arr = [];
+      var attr_name = $('input[name^="subject"]').eq(0).attr('name');
+      var input_arr = [];
+      for (var i = 0; i < $('input[name^="subject"]:checked').length; i++) {
+        if ($('input[name^="subject"]:checked').eq(i).attr('name') === attr_name) {
+          input_arr.push($('input[name^="subject"]:checked').eq(i).val());
+          if (i === $('input[name^="subject"]:checked').length - 1) {
+            output_arr.push(input_arr);
+          }
+        } else {
+          output_arr.push(input_arr);
+          attr_name = $('input[name^="subject"]:checked').eq(i).attr('name');
+          input_arr = [];
+          input_arr.push($('input[name^="subject"]:checked').eq(i).val());
+        }
+      }
+      for (var j = 0; j < data.length;j++) {
+        post_data.answer[j] = 
+        {
+          number: '',
+          type:'',
+          answer: [
+          ]
+        }
+        post_data.answer[j].number = data[j].number;
+        post_data.answer[j].type = data[j].type;
+        post_data.answer[j].answer = output_arr[j];
+      }
+      if (output_arr.length === data.length) {
+        for (var j = 0; j < data.length;j++) {
+          post_data.answer[j] = 
+          {
+            number: '',
+            type:'',
+            answer: [
+            ]
+          }
+          post_data.answer[j].number = data[j].number;
+          post_data.answer[j].type = data[j].type;
+          post_data.answer[j].answer = output_arr[j];
+        }
+        return post_data;
+      } else {
+        return false;
+      }
+    }
+    function getUrlParam(names) {//获取URL中的参数
+      var reg = new RegExp("(^|&)" + names + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+      var r = window.location.search.substr(1).match(reg); //匹配目标参数
+      if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+  </script>
+</body>
+</html>
