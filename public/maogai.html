@@ -194,17 +194,16 @@
       ]
     var weixinID = getUrlParam('weixinID')? getUrlParam('weixinID') : 'oKldy5yGdkZnvBJOKH8C7hYRql4U';
       $.ajax({
-      url: 'https://weixin.scut18pie1.top/get_maogai.php?weixinID=' + weixinID, // 'https://weixin.scut18pie1.top/get_maogai.php?weixinID=' + 'oKldy5yGdkZnvBJOKH8C7hYRql4U' http://127.0.0.1:3000/start?weixinID=' + 'oKldy5yGdkZnvBJOKH8C7hYRql4U'
+      url: 'http://weixin.scut18pie1.top/get_maogai.php?weixinID=' + weixinID, // 'https://weixin.scut18pie1.top/get_maogai.php?weixinID=' + 'oKldy5yGdkZnvBJOKH8C7hYRql4U' http://127.0.0.1:3000/start?weixinID=' + 'oKldy5yGdkZnvBJOKH8C7hYRql4U'
       data: {
       },
       xhrFields: {
-        withCredentials: true,
-        "Content-Type": "application/json"
+        withCredentials: true
       },
       crossDomain: true,
       success: function (data) {
         console.log(data);
-        renderData(data);
+        renderData(JSON.parse(data.replace(/(\\r|\s)/g,'')));
       },
       error: function (err, text) {
         console.log(err.status);
