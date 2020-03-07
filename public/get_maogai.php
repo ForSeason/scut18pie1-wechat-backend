@@ -9,7 +9,6 @@ $user = new User('123');
 
 if (!MAOGAI_ON || 
     !isset($_GET['weixinID']) || 
-    $user->weixinID2username($_GET['weixinID']) == 'unknown'
 ) {
     header('HTTP/1.1 403 Forbidden');
     echo 'GUNAAAAAAAA~~~~!!!';
