@@ -4,7 +4,7 @@ include_once __DIR__."/../settings/general.php";
 
 $redis = new \Predis\Client();
 if ($redis->exists(MAOGAI_FILE)) {
-    return json_decode($redis->get(MAOGAI_FILE));
+    return json_decode($redis->get(MAOGAI_FILE), true);
 }
 
 $text = new Docx2Text();
